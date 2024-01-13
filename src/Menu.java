@@ -37,13 +37,13 @@ public class Menu
                     String insertPsw =  insertCredentials.nextLine();
 
                     //controllo che la funzione passata dalla classe Utente restituisca effettivamente true perchè il login vada a buon fine
-                    if(User.LoginJson(insertUsername, insertPsw) == true)
+                    if(UserDao.Search(insertUsername,insertPsw))
                     {
                         System.out.println("LOGIN EFFETTUATO CON SUCCESSO");
                         progressControl=true;
                         PrintOperations(insertUsername);
                         //richiamo la funzione saldo per farmi stampare il saldo attuale dell'utente (inserito al momento della registrazione nella classe Utente)
-                        PrintBalance(insertUsername);
+                        PrintBalance(insertUsername,insertPsw);
 
                     }
                     else
@@ -94,9 +94,8 @@ public class Menu
         }
 
     }
-    public void PrintBalance(String inputUsername) throws IOException
-    {
-        System.out.println("Il tuo saldo è:" + User.ViewBalanceJson(inputUsername));
+    public void PrintBalance(String inputUsername, String inputPassword) throws IOException, SQLException {
+        System.out.println("Il tuo saldo è:" + UserDao.ViewBalance(inputUsername,inputPassword));
         PrintMenu(inputUsername);
     }
     public void PrintOperations (String inputUsername)

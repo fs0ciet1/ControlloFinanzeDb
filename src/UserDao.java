@@ -1,3 +1,5 @@
+import java.sql.*;
+
 public class UserDao
 {
     //=================================== FUN CONNESSIONE ===================================//
@@ -69,7 +71,8 @@ public class UserDao
             PreparedStatement cmd = null;
 
             //inserimento effettivo di una nuovo record nel db
-            try {
+            try
+            {
                 String updateTableSQL = "INSERT INTO users(username, password, balance) VALUES(?,?, ?)";
                 cmd = ConnectionDb().prepareStatement(updateTableSQL);
 
@@ -86,5 +89,47 @@ public class UserDao
             }
         }
         return true;
+    }
+
+    //=================================== FUN MOSTRA SALDO ===================================//
+    public static String ViewBalance(String inputUsername, String inputPassword) throws SQLException
+    {
+        //se trova un utente
+        if (Search(inputUsername, inputPassword))
+        {
+            PreparedStatement cmd = null;
+            //String qry = "SELECT * FROM users WHERE username= ? and password= ?";
+            try
+            {
+                String qry = "SELECT * FROM users WHERE username= ? and password= ?";
+                cmd = ConnectionDb().prepareStatement(qry);
+                cmd.setString(1, inputUsername);
+                cmd.setString(2, inputPassword);
+
+                try (ResultSet resultSet = cmd.executeQuery())
+                {
+                    // Se c'è un risultato, returno il valore
+                    if (resultSet.next())
+                    {
+                        return resultSet.getString("balance");
+                    }
+                    else
+                    {
+                        return "TU MA";
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return "ERRORE VISUALIZZA BILANCIO";
+            }
+
+        }
+
+        //se non trova un utente
+        else
+        {
+            return "ERRORE, utente non trovato nella funzione mostra saldo di UserDao";
+        }
     }
 }
