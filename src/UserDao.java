@@ -37,10 +37,13 @@ public class UserDao
     public static boolean Search(String inputUsername,String inputPassword)throws SQLException
     {
         PreparedStatement cmd = null;
-        String qry = "SELECT * FROM users WHERE username= ? and password= ?";
+
         try
         {
+            String qry = "SELECT * FROM users WHERE username= ? and password= ?";
+
             cmd = ConnectionDb().prepareStatement(qry);
+
             cmd.setString(1, inputUsername);
             cmd.setString(2,  inputPassword);
 
@@ -60,7 +63,7 @@ public class UserDao
     //=================================== FUN REGISTRAZIONE ===================================//
     public static boolean Insert(String inputUsername, String inputPassword, double inputBalance) throws SQLException
     {
-        //true = usetnte trovate
+        //true = utente trovato
         if (Search(inputUsername,inputPassword))
         {
             //restituisce false se trova un utente gia presete e non va avanti
@@ -70,10 +73,11 @@ public class UserDao
         {
             PreparedStatement cmd = null;
 
-            //inserimento effettivo di una nuovo record nel db
+            //inserimento effettivo di un nuovo record nel db
             try
             {
                 String updateTableSQL = "INSERT INTO users(username, password, balance) VALUES(?,?, ?)";
+
                 cmd = ConnectionDb().prepareStatement(updateTableSQL);
 
                 cmd.setString(1, inputUsername);
@@ -98,11 +102,13 @@ public class UserDao
         if (Search(inputUsername, inputPassword))
         {
             PreparedStatement cmd = null;
-            //String qry = "SELECT * FROM users WHERE username= ? and password= ?";
+
             try
             {
                 String qry = "SELECT * FROM users WHERE username= ? and password= ?";
+
                 cmd = ConnectionDb().prepareStatement(qry);
+
                 cmd.setString(1, inputUsername);
                 cmd.setString(2, inputPassword);
 
@@ -113,23 +119,13 @@ public class UserDao
                     {
                         return resultSet.getString("balance");
                     }
-                    else
-                    {
-                        return "TU MA";
-                    }
                 }
             }
             catch (Exception e)
             {
                 return "ERRORE VISUALIZZA BILANCIO";
             }
-
         }
-
-        //se non trova un utente
-        else
-        {
-            return "ERRORE, utente non trovato nella funzione mostra saldo di UserDao";
-        }
+        return "ERRORE, utente non trovato nella funzione mostra saldo di UserDao";
     }
 }
