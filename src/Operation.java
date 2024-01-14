@@ -9,7 +9,7 @@ public class Operation
     private String username;
     private boolean operationType;      //TRUE = entrata , FALSE = uscita
     private double amount;
-    private String note;                // NOTE: forse non utile e andra traformato in categoria
+    private String note;                // NOTE: forse non utile e andra trasformato in categoria
 
     //=================================== COSTRUTTORE ===================================
     public Operation(String username, boolean operationType, double  amount , String note)
@@ -19,74 +19,6 @@ public class Operation
         this.amount = amount;
         this.note = note;
     }
-
-    //=================================== FUN ADD OPERATION ===================================//
-    public static void AddAndSubOperationJson(String username, boolean operationType, double amount, String note) throws IOException
-    {
-        ArrayList<Operation> operationsListJson = new ArrayList<Operation>();
-        ArrayList<User> usersListJson = new ArrayList<User>();
-        Operation newOperation = new Operation(username, operationType, amount, note);
-
-        //prelevo l'array list dal GestioneFileJson
-        //operationsListJson= JsonFileManupulation.ReadOperationsFile();
-
-        //ho bisogno di prelevare anche l'array list di utenti per poter aggiornare il saldo di quell utente specifico
-       // usersListJson = JsonFileManupulation.ReadUsersFile();
-
-        //aggiunta del nuovo movimento all arraylist temp
-        operationsListJson.add(newOperation);
-
-        //cerco la corrispondenza del Nomeutente dentro la listaUtentiTemp
-        for (int i = 0; i < usersListJson.size(); i++)
-        {
-            //trova e controlla username dato dal utente con l'arraylist
-            if(usersListJson.get(i).getUsername().equals(username))
-            {
-                //controllo se entrata o uscita
-                if(newOperation.getOperationType()==true)
-                {
-                    //ENTRATA positiva + quindi dovrò aggiungere i soldi dal saldo del utente
-                    usersListJson.get(i).AddToBalance(amount);
-                }
-                else
-                {
-                    //USCITA negativa - quindi dovrò rimuovere i soldi dal saldo del utente
-                    usersListJson.get(i).SubFromBalance(amount);
-                }
-            }
-
-        }
-
-        //sovrascrittuare del file json. Passo i cambiamenti fatti e ricaricalo il file
-        //JsonFileManupulation.WriteUsersFile(usersListJson);
-        //JsonFileManupulation.WriteOperationsFile(operationsListJson);
-    }
-
-    //=================================== FUN VIEW OPERATION ===================================//
-    //restituisce semplicemente un array di movimentei del utente specifico
-    public static ArrayList<Operation> ViewOperationJson(String username)
-    {
-        ArrayList<Operation> operationListJson = new ArrayList<Operation>();
-        //operationListJson = JsonFileManupulation.ReadOperationsFile();
-        ArrayList<Operation> operationsUserListTemp = new ArrayList<Operation>();
-
-
-        //poi scorrere tutto l'array e se idUtente è diverso da quello che mi è stato passato va eliminato, potrebbe non funziare quindi fare 2 array
-        for (int i = 0; i < operationListJson.size(); i++)
-        {
-
-            if (operationListJson.get(i).getUsername().equals(username))
-            {
-                //ogni volta che trova un operazione corrispondere all utente specifico, lo aggiunge a una lista temporanea
-                operationsUserListTemp.add(operationListJson.get(i));
-            }
-        }
-
-        //quindi qui avrò rimosso tutti i movimenti che non corrispondono a quello specifico utente e posso ritornarla a Menu
-        //ritorno la lista aggiornata e non devo scrivere nulla da nessuna parte
-        return operationsUserListTemp;
-    }
-
     //=================================== GETTER ===================================//
     public String getUsername() {
         return username;

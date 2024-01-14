@@ -37,13 +37,14 @@ public class Menu
                     String insertPsw =  insertCredentials.nextLine();
 
                     //controllo che la funzione passata dalla classe Utente restituisca effettivamente true perchè il login vada a buon fine
-                    if(UserDao.Search(insertUsername,insertPsw))
+                    if(UserDao.Search(insertUsername, insertPsw))
                     {
+
                         System.out.println("LOGIN EFFETTUATO CON SUCCESSO");
                         progressControl=true;
                         PrintOperations(insertUsername);
                         //richiamo la funzione saldo per farmi stampare il saldo attuale dell'utente (inserito al momento della registrazione nella classe Utente)
-                        PrintBalance(insertUsername,insertPsw);
+                        PrintBalance(insertUsername, insertPsw);
 
                     }
                     else
@@ -75,7 +76,6 @@ public class Menu
                     {
                         System.out.println("REGISTRAZIONE EFFETTUATA");
                         progressControl=true;
-
                         //PrintBalance(inputUsername);
 
                     }
@@ -94,25 +94,16 @@ public class Menu
         }
 
     }
-    public void PrintBalance(String inputUsername, String inputPassword) throws IOException, SQLException {
-        System.out.println("Il tuo saldo è:" + UserDao.ViewBalance(inputUsername,inputPassword));
+    public void PrintBalance(String inputUsername, String inputPassword) throws IOException, SQLException
+    {
+        System.out.println("Il tuo saldo è:" + UserDao.ViewBalance(inputUsername, inputPassword));
         PrintMenu(inputUsername);
     }
-    public void PrintOperations (String inputUsername)
+    public void PrintOperations (String inputUsername) throws SQLException
     {
-        ArrayList<Operation> operationsUserList = new ArrayList<Operation>();
-        operationsUserList = Operation.ViewOperationJson(inputUsername);
-        System.out.println("I tuoi movimenti sono:");
-        for (int i = 0; i < operationsUserList.size(); i++)
-        {
-            if (operationsUserList.get(i).getOperationType() == true)
-                System.out.println("> Entrate: " + operationsUserList.get(i).getAmount() + " Note: " + operationsUserList.get(i).getNote());
-            else
-                System.out.println("> Uscite: " + operationsUserList.get(i).getAmount() + " Note: " + operationsUserList.get(i).getNote());
-
-        }
+        OperationDao.ViewOperation(inputUsername);
     }
-    public void PrintMenu(String inputUsername) throws IOException
+    public void PrintMenu(String inputUsername) throws IOException, SQLException
     {
         Scanner input = new Scanner(System.in);
         boolean menuController=false;
@@ -140,8 +131,7 @@ public class Menu
                 System.out.println("Inserisci note:");
                 String note = inputNote.nextLine();
 
-                //richiamo funzione inputAmount lau
-                Operation.AddAndSubOperationJson(inputUsername, true, amount, note);
+                OperationDao.InsertOperation(inputUsername, true, amount, note);
             }
             //uscite
             else if (inputChoice.equalsIgnoreCase("b"))
@@ -155,8 +145,7 @@ public class Menu
                 System.out.println("Inserisci note:");
                 String note = inputNote.nextLine();
 
-                //richiamo funzione inserimentoEntrate lau
-                Operation.AddAndSubOperationJson(inputUsername, false, amount, note);
+                OperationDao.InsertOperation(inputUsername, false, amount, note);
             }
             //esc
             else if (inputChoice.equalsIgnoreCase("c"))
